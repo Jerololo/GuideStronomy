@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <!-- ============================================================
+         METADATOS BÁSICOS Y CONFIGURACIÓN DEL DOCUMENTO
+    ============================================================ -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Guidestronomy — Restaurantes del barrio La Independencia, Itagüí</title>
+    <meta name="description" content="Guidestronomy es la guía gastronómica del barrio La Independencia en Itagüí, Antioquia. Descubre restaurantes poco reconocidos, fondas tradicionales, cafeterías y joyas ocultas de la cocina local.">
+    <meta name="keywords" content="barrio La Independencia, Itagüí, Antioquia, gastronomía local, restaurantes poco reconocidos, comida típica, joyas ocultas, cafeterías, menú, precios">
+    <meta name="author" content="Guidestronomy">
+    <meta name="robots" content="index, follow">
+    <meta name="theme-color" content="#1B4332">
+
+    <!-- Open Graph / Redes Sociales -->
+    <meta property="og:title" content="Guidestronomy — Sabores de La Independencia, Itagüí">
+    <meta property="og:description" content="Guía gastronómica para descubrir y apoyar los restaurantes locales y poco reconocidos del barrio La Independencia, Itagüí.">
+    <meta property="og:type" content="website">
+
+    <!-- Tipografías externas: Outfit (Títulos) e Inter (Cuerpo) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Leaflet CSS (Mapa interactivo de código abierto) -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+
+    <!-- Hoja de estilos principal -->
+    <link rel="stylesheet" href="css/GuideStronomy.css">
+
+    <!-- Scripts deferidos -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin="" defer></script>
+    <script src="js/GuideStronomy.js" defer></script>
+</head>
+<body>
+
+    <!-- Skip link de accesibilidad para lectores de pantalla y navegación por teclado -->
+    <a href="#main-content" class="skip-link">Saltar al contenido principal</a>
+
+    <!-- ============================================================
+         HEADER PRINCIPAL: LOGO, NAVEGACIÓN Y ACCIONES
+    ============================================================ -->
+    <header id="site-header" class="site-header" data-scrolled="false">
+        <div class="container header-inner">
+
+            <!-- Logotipo del proyecto -->
+            <a href="#hero" class="brand" id="brand-link" aria-label="Guidestronomy, ir al inicio">
+                <span class="brand-mark" aria-hidden="true">
+                    <svg viewBox="0 0 48 48" class="brand-icon" role="img" aria-hidden="true">
+                        <path d="M24 4C14 4 6 12 6 22c0 12 18 22 18 22s18-10 18-22C42 12 34 4 24 4z" fill="currentColor"/>
+                        <circle cx="24" cy="21" r="7" fill="#fff"/>
+                    </svg>
+                </span>
+                <span class="brand-name">Guidestronomy</span>
+            </a>
+
+            <!-- Navegación principal -->
+            <nav class="main-nav" id="main-nav" aria-label="Navegación principal">
+                <button type="button" id="nav-toggle" class="nav-toggle" aria-expanded="false" aria-controls="nav-menu" aria-label="Abrir menú de navegación">
+                    <span class="nav-toggle-bar"></span>
+                    <span class="nav-toggle-bar"></span>
+                    <span class="nav-toggle-bar"></span>
+                </button>
+                <ul class="nav-menu" id="nav-menu" data-state="closed">
+                    <li class="nav-item"><a href="#hero" class="nav-link" data-nav-link>Inicio</a></li>
+                    <li class="nav-item"><a href="#explorar" class="nav-link" data-nav-link>Restaurantes</a></li>
+                    <li class="nav-item"><a href="#joyas-ocultas" class="nav-link" data-nav-link>Joyas Ocultas</a></li>
+                    <li class="nav-item"><a href="#mapa" class="nav-link" data-nav-link>Mapa</a></li>
+                    <li class="nav-item"><a href="#eventos" class="nav-link" data-nav-link>Eventos</a></li>
+                    <li class="nav-item"><a href="#contacto" class="nav-link" data-nav-link>Contacto</a></li>
+                </ul>
+            </nav>
+
+            <!-- Acciones de cabecera -->
+            <div class="header-actions">
+                <button type="button" id="search-toggle" class="icon-button" aria-label="Buscar restaurantes" data-action="focus-main-search" title="Buscar">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+
+                <button type="button" id="theme-toggle" class="icon-button" aria-label="Cambiar tema claro u oscuro" data-action="toggle-theme" aria-pressed="false" title="Cambiar tema">
+                    <svg class="icon icon-theme-light" viewBox="0 0 24 24" aria-hidden="true">
+                        <circle cx="12" cy="12" r="5" fill="none" stroke="currentColor" stroke-width="2"/>
+                        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                    </svg>
+                </button>
+
+                <button type="button" id="favorites-toggle" class="icon-button" aria-label="Ver mis restaurantes favoritos" data-action="open-favorites" title="Mis Favoritos">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <path d="M12 21s-7.5-4.6-10-9.3C.4 8.1 2 4.5 5.6 4C8 3.6 10 5 12 7c2-2 4-3.4 6.4-3C22 4.5 23.6 8.1 22 11.7C19.5 16.4 12 21 12 21z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/>
+                    </svg>
+                    <span class="badge-counter" id="favorites-counter" data-count="0">0</span>
+                </button>
+
+                <button type="button" class="button button-primary button-small" data-action="open-business-signup">
+                    Registrar Negocio
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main id="main-content">
+
+        <!-- ============================================================
+             SECCIÓN HERO: PORTADA Y BUSCADOR PRINCIPAL
+        ============================================================ -->
+        <section id="hero" class="hero" aria-labelledby="hero-title">
+            <div class="hero-media" aria-hidden="true" data-hero-background></div>
+            <div class="hero-overlay" aria-hidden="true"></div>
+
+            <div class="container hero-content">
+                <p class="eyebrow hero-eyebrow">Barrio La Independencia · Itagüí, Antioquia</p>
+                <h1 id="hero-title" class="hero-title">Descubre los sabores que hacen único al barrio La Independencia</h1>
+                <p class="hero-subtitle">Conoce los restaurantes poco reconocidos, fondas familiares y rincones gastronómicos tradicionales de nuestra comunidad en Itagüí.</p>
+                <p class="hero-description">
+                    Guidestronomy visibiliza la cocina local y el talento culinario de barrio La Independencia. Consulta menús, platos, precios estimados, horarios de atención y números de contacto directo para apoyar los negocios de nuestra tierra.
+                </p>
+
+                <!-- Buscador Principal -->
+                <form id="main-search-form" class="main-search" role="search" aria-label="Buscar restaurantes en La Independencia Itagüí" data-form="main-search">
+                    <div class="search-field">
+                        <label for="search-query" class="visually-hidden">Buscar por nombre, plato o especialidad</label>
+                        <svg class="search-field-icon" viewBox="0 0 24 24" aria-hidden="true">
+                            <circle cx="11" cy="11" r="7" fill="none" stroke="currentColor" stroke-width="2"/>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+                        </svg>
+                        <input type="text" id="search-query" name="query" placeholder="¿Qué se te antoja hoy? (ej. sancocho, pizza, café)" autocomplete="off">
+                    </div>
+
+                    <div class="search-field">
+                        <label for="search-price" class="visually-hidden">Rango de precio</label>
+                        <select id="search-price" name="priceRange" aria-label="Filtrar por rango de precio">
+                            <option value="">Cualquier precio</option>
+                            <option value="1">$ Económico (&lt; $15.000 COP)</option>
+                            <option value="2">$$ Moderado ($15.000 - $30.000 COP)</option>
+                            <option value="3">$$$ Especial ($30.000 - $50.000 COP)</option>
+                            <option value="4">$$$$ Premium (&gt; $50.000 COP)</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="button button-primary search-submit" id="search-submit-button">Buscar restaurantes</button>
+                </form>
+
+                <p class="hero-search-hint">Tip: Puedes filtrar directamente por tipo de comida haciendo clic en las categorías abajo.</p>
+
+                <div class="hero-cta-group">
+                    <a href="#explorar" class="button button-ghost button-large">Explorar catálogo completo</a>
+                    <a href="#mapa" class="button button-secondary button-large">Ver mapa del barrio</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             SECCIÓN DE INVITACIÓN A REGISTRAR NEGOCIOS
+        ============================================================ -->
+        <section id="registrar-restaurante" class="section register-business-section" aria-labelledby="register-title">
+            <div class="container register-business-inner">
+                <div class="register-business-text">
+                    <p class="eyebrow">Para dueños de restaurantes y locales</p>
+                    <h2 id="register-title" class="section-title">¿Tienes un restaurante en La Independencia?</h2>
+                    <p class="register-business-description">
+                        Guidestronomy ayuda a que vecinos de Itagüí y visitantes conozcan tu sazón, tu menú y tus datos de contacto sin intermediarios ni comisiones abusivas.
+                    </p>
+                    <ul class="benefits-list" id="business-benefits-list">
+                        <li>Ficha detallada con fotos, horarios y platos destacados.</li>
+                        <li>Enlace directo a tu WhatsApp y llamada telefónica.</li>
+                        <li>Ubicación visible en el mapa interactivo del barrio La Independencia.</li>
+                        <li>Totalmente gratuito para promover la economía local de Itagüí.</li>
+                    </ul>
+                    <button type="button" class="button button-primary button-large" data-action="open-business-signup">
+                        Inscribir mi restaurante gratis
+                    </button>
+                </div>
+                <div class="register-business-media" aria-hidden="true">
+                    <div class="register-business-card-preview">
+                        <span class="preview-badge">Orgullo de Itagüí</span>
+                        <h3>Impulsa tu sazón local</h3>
+                        <p>Llega a más personas que valoran la comida auténtica preparada en nuestro propio vecindario.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             SECCIÓN PRINCIPAL: EXPLORAR RESTAURANTES + FILTROS
+        ============================================================ -->
+        <section id="explorar" class="section featured-section" aria-labelledby="featured-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Guía local de La Independencia</p>
+                    <h2 id="featured-title" class="section-title">Restaurantes del barrio</h2>
+                    <p class="section-subtitle">Filtra por categoría o busca por nombre para ver detalles, horarios, teléfonos y menús con precios.</p>
+                </div>
+
+                <!-- Barra de filtros interactivos por categoría -->
+                <div id="categorias" class="category-filter-bar" role="group" aria-label="Filtrar restaurantes por categoría">
+                    <button type="button" class="category-chip" data-category="" aria-pressed="true">Todas</button>
+                    <button type="button" class="category-chip" data-category="comida-tipica" aria-pressed="false"><span aria-hidden="true">🍲</span> Comida típica</button>
+                    <button type="button" class="category-chip" data-category="cafe" aria-pressed="false"><span aria-hidden="true">☕</span> Café</button>
+                    <button type="button" class="category-chip" data-category="panaderia" aria-pressed="false"><span aria-hidden="true">🥐</span> Panadería</button>
+                    <button type="button" class="category-chip" data-category="hamburguesas" aria-pressed="false"><span aria-hidden="true">🍔</span> Hamburguesas</button>
+                    <button type="button" class="category-chip" data-category="pizza" aria-pressed="false"><span aria-hidden="true">🍕</span> Pizza</button>
+                    <button type="button" class="category-chip" data-category="comida-rapida" aria-pressed="false"><span aria-hidden="true">🌭</span> Comida rápida</button>
+                    <button type="button" class="category-chip" data-category="parrilla" aria-pressed="false"><span aria-hidden="true">🥩</span> Parrilla</button>
+                    <button type="button" class="category-chip" data-category="desayunos" aria-pressed="false"><span aria-hidden="true">🍳</span> Desayunos</button>
+                    <button type="button" class="category-chip" data-category="postres" aria-pressed="false"><span aria-hidden="true">🍰</span> Postres y helados</button>
+                    <button type="button" class="category-chip" data-category="vegetariana" aria-pressed="false"><span aria-hidden="true">🥗</span> Saludable / Veggie</button>
+                </div>
+
+                <!-- Barra de estado y ordenamiento -->
+                <div class="results-toolbar" id="results-toolbar">
+                    <p class="results-count" id="results-count">
+                        Mostrando <strong id="results-count-number">0</strong> establecimientos en La Independencia
+                    </p>
+                    <div class="sort-control">
+                        <label for="sort-select">Ordenar por:</label>
+                        <select id="sort-select" name="sort">
+                            <option value="relevancia">Relevancia</option>
+                            <option value="calificacion">Mejor calificación</option>
+                            <option value="resenas">Número de reseñas</option>
+                            <option value="precio-asc">Precio: menor a mayor</option>
+                            <option value="precio-desc">Precio: mayor a menor</option>
+                            <option value="nombre">Nombre A - Z</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Grid dinámico donde JavaScript renderiza las tarjetas -->
+                <div class="restaurant-grid" id="restaurant-grid" aria-live="polite">
+                    <!-- Insertado dinámicamente por CardRenderer en GuideStronomy.js -->
+                </div>
+
+                <!-- Estado vacío cuando no hay coincidencias -->
+                <div class="empty-state" id="empty-state" hidden>
+                    <div class="empty-state-icon" aria-hidden="true">🍽️</div>
+                    <p class="empty-state-title">No encontramos restaurantes con esos criterios</p>
+                    <p class="empty-state-text">Intenta cambiar las palabras de búsqueda, limpiar los filtros de precio o seleccionar otra categoría.</p>
+                    <button type="button" class="button button-secondary" data-action="reset-filters">Limpiar filtros de búsqueda</button>
+                </div>
+
+                <!-- Paginación progresiva / Cargar más -->
+                <div class="load-more-zone" id="load-more-zone">
+                    <button type="button" class="button button-secondary" id="load-more-button" data-action="load-more">Cargar más restaurantes</button>
+                    <div class="loading-indicator" id="loading-indicator" hidden aria-live="polite">Cargando experiencias...</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             SECCIÓN JOYAS OCULTAS
+        ============================================================ -->
+        <section id="joyas-ocultas" class="section hidden-gems-section" aria-labelledby="hidden-gems-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Historias de tradición familiar</p>
+                    <h2 id="hidden-gems-title" class="section-title">Joyas Ocultas de La Independencia</h2>
+                    <p class="section-subtitle">Negocios con años de historia en las esquinas y calles de nuestro barrio en Itagüí.</p>
+                </div>
+
+                <div class="hidden-gems-grid" id="hidden-gems-grid">
+                    <article class="gem-card">
+                        <div class="gem-media-wrapper">
+                            <img src="https://images.unsplash.com/photo-1544025162-d76694265947?auto=format&fit=crop&w=700&q=80" alt="Fonda Doña Rosa en Itagüí" class="gem-image" loading="lazy">
+                            <span class="badge badge-gem">Joya Oculta</span>
+                        </div>
+                        <div class="gem-content">
+                            <h3 class="gem-title">Fonda Tradicional Doña Rosa</h3>
+                            <p class="gem-story">«Más de 24 años deleitando a los vecinos con sancocho de leña y cazuelas tradicionales servidas como en casa.»</p>
+                            <p class="gem-meta">📍 Calle 31 con Cra 57, La Independencia, Itagüí · Especialidad: Sancocho trifásico</p>
+                            <div class="gem-actions">
+                                <button type="button" class="button button-secondary button-small" data-action="view-details" data-restaurant-id="r001">Ver Menú y Detalles</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="gem-card">
+                        <div class="gem-media-wrapper">
+                            <img src="https://images.unsplash.com/photo-1509440159596-0249088772ff?auto=format&fit=crop&w=700&q=80" alt="Panadería artesanal en La Independencia" class="gem-image" loading="lazy">
+                            <span class="badge badge-gem">Joya Oculta</span>
+                        </div>
+                        <div class="gem-content">
+                            <h3 class="gem-title">Panadería y Café El Portal del Trigo</h3>
+                            <p class="gem-story">«El secreto del pandequeso caliente cada madrugada y el café de origen campesino seleccionado en grano.»</p>
+                            <p class="gem-meta">📍 Carrera 58 # 32-15, La Independencia, Itagüí · Especialidad: Pandequeso y Buñuelos</p>
+                            <div class="gem-actions">
+                                <button type="button" class="button button-secondary button-small" data-action="view-details" data-restaurant-id="r003">Ver Menú y Detalles</button>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article class="gem-card">
+                        <div class="gem-media-wrapper">
+                            <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=700&q=80" alt="Parrilla y asados familiares en Itagüí" class="gem-image" loading="lazy">
+                            <span class="badge badge-gem">Joya Oculta</span>
+                        </div>
+                        <div class="gem-content">
+                            <h3 class="gem-title">Asados y Parrilla Donde Carlos</h3>
+                            <p class="gem-story">«Un acogedor espacio familiar donde la carne a la brasa y la chunchurria crocante reúnen a las familias del sector.»</p>
+                            <p class="gem-meta">📍 Calle 30A # 56-20, La Independencia, Itagüí · Especialidad: Churrasco y picada criolla</p>
+                            <div class="gem-actions">
+                                <button type="button" class="button button-secondary button-small" data-action="view-details" data-restaurant-id="r006">Ver Menú y Detalles</button>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             SECCIÓN TOP 3 DEL MES
+        ============================================================ -->
+        <section id="top-del-mes" class="section top-month-section" aria-labelledby="top-month-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Preferidos de la comunidad</p>
+                    <h2 id="top-month-title" class="section-title">Top 3 del Mes en La Independencia</h2>
+                    <p class="section-subtitle">Los lugares con mejores opiniones de comensales locales en las últimas semanas.</p>
+                </div>
+                <ol class="ranking-list" id="top-month-grid" aria-live="polite">
+                    <!-- Elementos de ranking generados por JS -->
+                </ol>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             SECCIÓN DE MAPA INTERACTIVO (LEAFLET)
+        ============================================================ -->
+        <section id="mapa" class="section map-section" aria-labelledby="map-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Ubicación geográfica</p>
+                    <h2 id="map-title" class="section-title">Mapa de Restaurantes en La Independencia</h2>
+                    <p class="section-subtitle">Explora los puntos gastronómicos directamente en el mapa del barrio La Independencia, municipio de Itagüí.</p>
+                </div>
+                <div class="map-container" id="map-container" role="region" aria-label="Mapa interactivo de restaurantes en La Independencia, Itagüí">
+                    <div id="leaflet-map" class="leaflet-map"></div>
+                    <noscript>
+                        <p class="map-placeholder-text">Por favor activa JavaScript para poder explorar el mapa interactivo.</p>
+                    </noscript>
+                </div>
+                <div class="map-legend">
+                    <span class="legend-item"><span class="legend-dot open"></span> Abierto ahora</span>
+                    <span class="legend-item"><span class="legend-dot closed"></span> Cerrado actualmente</span>
+                    <span class="legend-help">Haz clic en cualquier marcador para ver nombre, horario y enlace directo al menú.</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             SECCIÓN DE EVENTOS CULINARIOS
+        ============================================================ -->
+        <section id="eventos" class="section events-section" aria-labelledby="events-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Cultura y Encuentro</p>
+                    <h2 id="events-title" class="section-title">Eventos Gastronómicos en Itagüí</h2>
+                    <p class="section-subtitle">Actividades, ferias barriales y festivales culinarios para disfrutar en familia.</p>
+                </div>
+
+                <div class="events-list" id="events-grid">
+                    <article class="event-card">
+                        <img src="https://images.unsplash.com/photo-1511556532299-8f662fc26c06?auto=format&fit=crop&w=400&q=80" alt="Muestra de café local en Itagüí" class="event-image" loading="lazy">
+                        <div class="event-date-block" aria-hidden="true">
+                            <span class="event-day">15</span>
+                            <span class="event-month">Nov</span>
+                        </div>
+                        <div class="event-content">
+                            <h3 class="event-title">Festival del Café y Sabores de Barrio</h3>
+                            <p class="event-meta">Sábado 15 de Noviembre · 9:00 a.m. a 6:00 p.m. · Cancha La Independencia, Itagüí</p>
+                            <p class="event-description">Encuentro de panaderías tradicionales, baristas de café local y reposterías artesanales del sector.</p>
+                            <button type="button" class="button button-secondary button-small" data-action="view-event" data-event-title="Festival del Café y Sabores">Más información</button>
+                        </div>
+                    </article>
+
+                    <article class="event-card">
+                        <img src="https://images.unsplash.com/photo-1555939594-58d7cb561ad1?auto=format&fit=crop&w=400&q=80" alt="Feria de asados en La Independencia" class="event-image" loading="lazy">
+                        <div class="event-date-block" aria-hidden="true">
+                            <span class="event-day">28</span>
+                            <span class="event-month">Nov</span>
+                        </div>
+                        <div class="event-content">
+                            <h3 class="event-title">Ruta Gastronómica de la Empanada y el Asado</h3>
+                            <p class="event-meta">Viernes 28 de Noviembre · 4:00 p.m. · Carrera 58, Barrio La Independencia</p>
+                            <p class="event-description">Ruta comunitaria para degustar las mejores recetas de empanadas de iglesia y cortes a la parrilla.</p>
+                            <button type="button" class="button button-secondary button-small" data-action="view-event" data-event-title="Ruta Gastronómica de la Empanada">Más información</button>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             SECCIÓN DE TESTIMONIOS REALES
+        ============================================================ -->
+        <section id="testimonios" class="section testimonials-section" aria-labelledby="testimonials-title">
+            <div class="container">
+                <div class="section-heading">
+                    <p class="eyebrow">Opiniones de la comunidad</p>
+                    <h2 id="testimonials-title" class="section-title">Lo que dicen vecinos y visitantes</h2>
+                </div>
+                <div class="testimonials-grid">
+                    <article class="testimonial-card">
+                        <div class="testimonial-rating" aria-label="5 de 5 estrellas"><span class="stars">★★★★★</span></div>
+                        <p class="testimonial-comment">«Vivo en Itagüí hace 10 años y gracias a Guidestronomy descubrí una fonda con el mejor ajiaco a tres cuadras de mi casa que no tenía letrero grande.»</p>
+                        <p class="testimonial-author">Mauricio Henao <span class="testimonial-city">— Residente de La Independencia</span></p>
+                    </article>
+                    <article class="testimonial-card">
+                        <div class="testimonial-rating" aria-label="5 de 5 estrellas"><span class="stars">★★★★★</span></div>
+                        <p class="testimonial-comment">«Tener los números de WhatsApp directos y los precios claros ayuda un montón para pedir almuerzos caseros de buena calidad.»</p>
+                        <p class="testimonial-author">Carolina Zapata <span class="testimonial-city">— Visitante de Envigado</span></p>
+                    </article>
+                    <article class="testimonial-card">
+                        <div class="testimonial-rating" aria-label="5 de 5 estrellas"><span class="stars">★★★★★</span></div>
+                        <p class="testimonial-comment">«Inscribí mi negocio de hamburguesas artesanales y cada semana llegan comensales nuevos que vieron la ficha en la página.»</p>
+                        <p class="testimonial-author">Julián Montoya <span class="testimonial-city">— Propietario local en Itagüí</span></p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <!-- ============================================================
+             SECCIÓN NEWSLETTER / BOLETÍN LOCAL
+        ============================================================ -->
+        <section id="newsletter" class="section newsletter-section" aria-labelledby="newsletter-title">
+            <div class="container newsletter-inner">
+                <h2 id="newsletter-title" class="section-title">Apoya la gastronomía de La Independencia</h2>
+                <p class="newsletter-subtitle">Recibe en tu correo recomendaciones de nuevos restaurantes, promociones y eventos culinarios en Itagüí.</p>
+                <form id="newsletter-form" class="newsletter-form" novalidate>
+                    <div class="form-field">
+                        <label for="newsletter-name" class="visually-hidden">Tu nombre</label>
+                        <input type="text" id="newsletter-name" name="name" placeholder="Tu nombre" required minlength="2" data-validate="required,minlength">
+                        <span class="form-error" id="newsletter-name-error" role="alert"></span>
+                    </div>
+                    <div class="form-field">
+                        <label for="newsletter-email" class="visually-hidden">Tu correo electrónico</label>
+                        <input type="email" id="newsletter-email" name="email" placeholder="tu@correo.com" required data-validate="required,email">
+                        <span class="form-error" id="newsletter-email-error" role="alert"></span>
+                    </div>
+                    <button type="submit" class="button button-primary">Suscribirme gratis</button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- ============================================================
+         FOOTER PRINCIPAL
+    ============================================================ -->
+    <footer id="contacto" class="site-footer" aria-labelledby="footer-heading">
+        <h2 id="footer-heading" class="visually-hidden">Información de contacto y pie de página</h2>
+        <div class="container footer-grid">
+
+            <div class="footer-column footer-brand-column">
+                <a href="#hero" class="brand" aria-label="Guidestronomy, ir al inicio">
+                    <span class="brand-mark" aria-hidden="true">
+                        <svg viewBox="0 0 48 48" class="brand-icon" role="img" aria-hidden="true">
+                            <path d="M24 4C14 4 6 12 6 22c0 12 18 22 18 22s18-10 18-22C42 12 34 4 24 4z" fill="currentColor"/>
+                            <circle cx="24" cy="21" r="7" fill="#fff"/>
+                        </svg>
+                    </span>
+                    <span class="brand-name">Guidestronomy</span>
+                </a>
+                <p class="footer-brand-description">
+                    Plataforma comunitaria dedicada a descubrir, organizar y promover la riqueza gastronómica poco reconocida del barrio La Independencia, en el municipio de Itagüí, Antioquia, Colombia.
+                </p>
+            </div>
+
+            <nav class="footer-column" aria-label="Secciones del sitio">
+                <h3 class="footer-column-title">Navegación</h3>
+                <ul class="footer-links">
+                    <li><a href="#hero">Inicio</a></li>
+                    <li><a href="#explorar">Restaurantes del Barrio</a></li>
+                    <li><a href="#joyas-ocultas">Joyas Ocultas</a></li>
+                    <li><a href="#mapa">Mapa de Ubicaciones</a></li>
+                    <li><a href="#eventos">Eventos Comunitarios</a></li>
+                </ul>
+            </nav>
+
+            <nav class="footer-column" aria-label="Categorías populares">
+                <h3 class="footer-column-title">Categorías</h3>
+                <ul class="footer-links">
+                    <li><a href="#explorar" data-category-link="comida-tipica">Comida típica antioqueña</a></li>
+                    <li><a href="#explorar" data-category-link="cafe">Cafeterías locales</a></li>
+                    <li><a href="#explorar" data-category-link="panaderia">Panaderías de barrio</a></li>
+                    <li><a href="#explorar" data-category-link="parrilla">Asados y Parrilla</a></li>
+                    <li><a href="#explorar" data-category-link="hamburguesas">Hamburguesas y Comidas rápidas</a></li>
+                </ul>
+            </nav>
+
+            <div class="footer-column">
+                <h3 class="footer-column-title">Ubicación y Contacto</h3>
+                <ul class="footer-contact">
+                    <li>📍 Barrio La Independencia, Itagüí, Antioquia, Colombia</li>
+                    <li>✉️ contacto@guidestronomy.local</li>
+                    <li>📞 +57 (604) 370 0000</li>
+                    <li>🕒 Lunes a Domingo, atención comunitaria</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <div class="container footer-bottom-inner">
+                <p class="footer-copy">© <span id="current-year">2026</span> Guidestronomy · Hecho con orgullo para el barrio La Independencia, Itagüí.</p>
+                <ul class="footer-legal-links">
+                    <li><a href="#" onclick="alert('Guidestronomy respeta la privacidad de los usuarios y comerciantes.'); return false;">Privacidad</a></li>
+                    <li><a href="#" onclick="alert('Plataforma orientada al fomento del comercio local sin cobro de comisiones.'); return false;">Términos</a></li>
+                </ul>
+            </div>
+        </div>
+    </footer>
+
+    <!-- ============================================================
+         MODALES Y DIÁLOGOS DE INTERACCIÓN
+    ============================================================ -->
+
+    <!-- Modal 1: Detalle Completo del Restaurante (Menú, Precios, Contacto, Horarios) -->
+    <div id="modal-restaurant-detail" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-detail-title">
+        <div class="modal-window modal-window-large">
+            <header class="modal-header">
+                <div>
+                    <span id="modal-detail-category" class="badge badge-popular">Categoría</span>
+                    <h2 id="modal-detail-title" class="modal-title">Nombre del Restaurante</h2>
+                </div>
+                <button type="button" class="modal-close" data-action="close-modal" aria-label="Cerrar detalles">✕</button>
+            </header>
+
+            <div class="modal-body" id="modal-detail-body">
+                <!-- Imagen principal y estado -->
+                <div class="modal-hero-image-wrap">
+                    <img id="modal-detail-image" src="" alt="" class="modal-hero-image">
+                    <span id="modal-detail-status" class="status-pill status-open">Abierto</span>
+                </div>
+
+                <!-- Datos clave del establecimiento -->
+                <div class="modal-meta-bar">
+                    <div class="meta-item">
+                        <span class="meta-label">Calificación:</span>
+                        <span id="modal-detail-rating" class="meta-value">★ 4.8 (120 reseñas)</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Rango de precio:</span>
+                        <span id="modal-detail-price" class="meta-value price-range">$$ Moderado</span>
+                    </div>
+                    <div class="meta-item">
+                        <span class="meta-label">Especialidad:</span>
+                        <strong id="modal-detail-specialty" class="meta-value">Plato especial</strong>
+                    </div>
+                </div>
+
+                <!-- Descripción e Historia -->
+                <div class="modal-section">
+                    <h3 class="modal-section-title">Sobre este establecimiento</h3>
+                    <p id="modal-detail-description" class="modal-text">Descripción detallada del restaurante en La Independencia.</p>
+                </div>
+
+                <!-- Ubicación, Contacto y Horarios -->
+                <div class="modal-section modal-contact-grid">
+                    <div class="contact-box">
+                        <h4>📍 Dirección en La Independencia</h4>
+                        <p id="modal-detail-address">Carrera 58, Itagüí</p>
+                    </div>
+                    <div class="contact-box">
+                        <h4>🕒 Horario de atención</h4>
+                        <p id="modal-detail-hours">Lunes a Domingo</p>
+                    </div>
+                    <div class="contact-box">
+                        <h4>📞 Teléfono y WhatsApp</h4>
+                        <p id="modal-detail-phone">+57 300 000 0000</p>
+                        <div class="contact-buttons-group">
+                            <a id="modal-btn-call" href="#" class="button button-secondary button-small">Llamar</a>
+                            <a id="modal-btn-whatsapp" href="#" target="_blank" rel="noopener noreferrer" class="button button-whatsapp button-small">Escribir al WhatsApp</a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Menú, Platos y Precios -->
+                <div class="modal-section">
+                    <h3 class="modal-section-title">Menú y Platos Destacados</h3>
+                    <p class="modal-section-subtitle">Precios estimados suministrados directamente por el restaurante en COP ($):</p>
+                    <div id="modal-detail-menu-grid" class="menu-items-grid">
+                        <!-- Insertado dinámicamente por JavaScript -->
+                    </div>
+                </div>
+            </div>
+
+            <footer class="modal-footer">
+                <button type="button" id="modal-detail-fav-btn" class="button button-secondary" data-action="toggle-modal-favorite">
+                    ♥ Guardar en Favoritos
+                </button>
+                <button type="button" class="button button-primary" data-action="close-modal">
+                    Cerrar
+                </button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Modal 2: Lista de Favoritos del Usuario -->
+    <div id="modal-favorites" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-fav-title">
+        <div class="modal-window">
+            <header class="modal-header">
+                <h2 id="modal-fav-title" class="modal-title">Mis Restaurantes Favoritos</h2>
+                <button type="button" class="modal-close" data-action="close-modal" aria-label="Cerrar favoritos">✕</button>
+            </header>
+            <div class="modal-body">
+                <div id="favorites-list-container" class="favorites-list-container">
+                    <!-- Elementos favoritos insertados por JS -->
+                </div>
+            </div>
+            <footer class="modal-footer">
+                <button type="button" class="button button-secondary" data-action="close-modal">Cerrar</button>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Modal 3: Formulario para Inscribir Restaurante en La Independencia -->
+    <div id="modal-register-business" class="modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modal-register-title">
+        <div class="modal-window modal-window-medium">
+            <header class="modal-header">
+                <div>
+                    <p class="eyebrow">Impulso local</p>
+                    <h2 id="modal-register-title" class="modal-title">Inscribir Restaurante en Guidestronomy</h2>
+                </div>
+                <button type="button" class="modal-close" data-action="close-modal" aria-label="Cerrar formulario">✕</button>
+            </header>
+
+            <form id="business-registration-form" class="modal-form" novalidate>
+                <div class="modal-body">
+                    <p class="modal-form-intro">
+                        Completa este formulario si eres propietario o conoces un restaurante del barrio <strong>La Independencia (Itagüí)</strong> que deba estar en esta guía.
+                    </p>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="reg-restaurant-name">Nombre del Restaurante *</label>
+                            <input type="text" id="reg-restaurant-name" name="nombre" required minlength="3" placeholder="Ej. Fonda Tradicional Los Paisas" data-validate="required,minlength">
+                            <span class="form-error" id="reg-restaurant-name-error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-owner-name">Nombre del Propietario o Encargado *</label>
+                            <input type="text" id="reg-owner-name" name="propietario" required minlength="3" placeholder="Ej. Martha Cecilia Gómez" data-validate="required,minlength">
+                            <span class="form-error" id="reg-owner-name-error"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="reg-phone">Teléfono o Celular de contacto *</label>
+                            <input type="tel" id="reg-phone" name="telefono" required placeholder="Ej. 300 123 4567" data-validate="required">
+                            <span class="form-error" id="reg-phone-error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-category">Tipo de Comida / Categoría *</label>
+                            <select id="reg-category" name="categoria" required>
+                                <option value="comida-tipica">Comida típica</option>
+                                <option value="cafe">Cafetería</option>
+                                <option value="panaderia">Panadería</option>
+                                <option value="hamburguesas">Hamburguesas</option>
+                                <option value="pizza">Pizza</option>
+                                <option value="comida-rapida">Comida rápida</option>
+                                <option value="parrilla">Asados y Parrilla</option>
+                                <option value="desayunos">Desayunos</option>
+                                <option value="postres">Postres y Helados</option>
+                                <option value="vegetariana">Saludable / Veggie</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-address">Dirección exacta en el barrio La Independencia *</label>
+                        <input type="text" id="reg-address" name="direccion" required placeholder="Ej. Carrera 58 # 32-15, La Independencia, Itagüí" data-validate="required">
+                        <span class="form-error" id="reg-address-error"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="reg-hours">Horarios de atención estimados *</label>
+                            <input type="text" id="reg-hours" name="horarios" required placeholder="Ej. Mar a Dom: 11:30 a.m. a 9:00 p.m." data-validate="required">
+                            <span class="form-error" id="reg-hours-error"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="reg-price">Nivel de precios aproximado *</label>
+                            <select id="reg-price" name="precio_nivel">
+                                <option value="1">$ Económico (Menos de $15.000 COP)</option>
+                                <option value="2" selected>$$ Moderado ($15.000 a $30.000 COP)</option>
+                                <option value="3">$$$ Especial ($30.000 a $50.000 COP)</option>
+                                <option value="4">$$$$ Premium (Más de $50.000 COP)</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-specialty">Plato estrella o especialidad *</label>
+                        <input type="text" id="reg-specialty" name="especialidad" required placeholder="Ej. Cazuela de frijoles con chicharrón de 10 patas" data-validate="required">
+                        <span class="form-error" id="reg-specialty-error"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-description">Breve descripción del restaurante e historia *</label>
+                        <textarea id="reg-description" name="descripcion" rows="3" required placeholder="Cuéntanos un poco de la sazón, los años que llevan en La Independencia y qué hace especial a tu negocio..." data-validate="required"></textarea>
+                        <span class="form-error" id="reg-description-error"></span>
+                    </div>
+                </div>
+
+                <footer class="modal-footer">
+                    <button type="button" class="button button-secondary" data-action="close-modal">Cancelar</button>
+                    <button type="submit" class="button button-primary" id="btn-submit-registration">Enviar para verificación</button>
+                </footer>
+            </form>
+        </div>
+    </div>
+
+    <!-- Contenedor global de notificaciones tipo Toast -->
+    <div id="notification-container" class="notification-container" aria-live="assertive" aria-atomic="true"></div>
+
+</body>
+</html>
+
